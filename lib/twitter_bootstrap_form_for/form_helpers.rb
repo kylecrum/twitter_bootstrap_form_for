@@ -6,7 +6,9 @@ module TwitterBootstrapFormFor::FormHelpers
       define_method "twitter_bootstrap_#{method}" do |record, *args, &block|
         # add the TwitterBootstrap builder to the options
         options           = args.extract_options!
-        options[:builder] = TwitterBootstrapFormFor::FormBuilder
+        options[:builder] ||= TwitterBootstrapFormFor::FormBuilder
+        options[:html] ||= {}
+        options[:html][:class] = 'form-horizontal'
 
         # call the original method with our overridden options
         _override_field_error_proc do
