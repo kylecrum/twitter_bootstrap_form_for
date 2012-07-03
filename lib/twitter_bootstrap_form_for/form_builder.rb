@@ -89,15 +89,31 @@ class TwitterBootstrapFormFor::FormBuilder < ActionView::Helpers::FormBuilder
   
   TOGGLES.each do |toggle|
     define_method toggle do |attribute, *args, &block|
-      description       = args.first.nil? ? '' : args.shift
-      target      = self.object_name.to_s + '_' + attribute.to_s
+      options  = args.extract_options!
+      label    = args.first.nil? ? '&nbsp;' : args.shift
+      description = args.first.nil? ? '&nbsp;' : args.shift
       label_class = toggle == :check_box ? "checkbox" : "radio"
-      label_class << " inline" if render_inline
-      template.concat template.content_tag(:label,{:for=>target,:class=>label_class}) do
-        template.concat super(attribute, *args)
-        template.concat description
+      self.div_wrapper_with_label(label,attribute,:input_wrapper_class=>'controls') do
+        toggle_html = super(attribute, *(args << options)) << description
+        template.concat template.content_tag(:label, toggle_html, :class=>label_class)
+        #template.concat template.content_tag(:label, class: label_class) do
+         # template.concat(super(attribute, *(args << options)) << description)
+        #end
+        block.call if block.present?
       end
     end
+    #define_method toggle do |attribute, *args, &block|
+    #  description       = args.first.nil? ? '' : args.shift
+    #  target      = self.object_name.to_s + '_' + attribute.to_s
+    #  label_class = toggle == :check_box ? "checkbox" : "radio"
+    #  label_class << " inline" if render_inline
+    #  template.logger.info("KYLE!!! #{args}")
+    #  template.concat self.label(attribute, target, class: label_class) do
+    #    template.logger.info("KYLE #{args}")
+    #    super(attribute, *args)
+    #    description
+    #  end
+    #end
   end
 
   protected
@@ -138,15 +154,15 @@ class TwitterBootstrapFormFor::FormBuilder < ActionView::Helpers::FormBuilder
     if render_inline
       yield
     else
-      input_wrapper_class = options.delete(:input_wrapper_class) || 'controls'
       div_wrapper(attribute,options) do
         if attribute
-          template.concat self.label(attribute, label, :class=>'control-label')
+          template.concat self.label(attribute, label.html_safe, :class=>'control-label')
         else
-          template.concat template.content_tag(:label, label, :class=>'control-label') if label.present?
+          template.concat template.content_tag(:label, label.html_safe, :class=>'control-label') if label
         end
         block_content = template.capture(&block)
         block_content << error_span
+        input_wrapper_class = options.delete(:input_wrapper_class) || 'controls'
         template.concat(template.content_tag(:div,block_content,:class=>input_wrapper_class))
       end
     end
