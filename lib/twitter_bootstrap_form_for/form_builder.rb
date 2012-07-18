@@ -79,9 +79,9 @@ class TwitterBootstrapFormFor::FormBuilder < ActionView::Helpers::FormBuilder
       label    = args.first.nil? ? '' : args.shift
       classes  = [ 'controls' ]
       classes << ('input-' + options.delete(:add_on).to_s) if options[:add_on]
-      classes << options.delete(:input_wrapper_class) if options.key?(:input_wrapper_class)
+      wrapper_class =  options.delete(:wrapper_class) if options.key?(:wrapper_class)
       
-      self.div_wrapper_with_label(label,attribute,:input_wrapper_class=>classes.join(' ')) do
+      self.div_wrapper_with_label(label,attribute,:input_wrapper_class=>classes.join(' '), :wrapper_class=>wrapper_class) do
         template.concat super(attribute, *(args << options))
         block.call if block.present?
       end
@@ -128,6 +128,7 @@ class TwitterBootstrapFormFor::FormBuilder < ActionView::Helpers::FormBuilder
   #
   def div_wrapper(attribute=nil,options = {}, &block)
     
+    options[:class] ||= options.delete(:wrapper_class) if options.key?(:wrapper_class)
     # call the block before determining the class to see if there are
     # errors for ANY of the attributes in this wrapper
     block_content = template.capture(&block)
