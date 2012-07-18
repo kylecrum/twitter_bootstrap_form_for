@@ -79,6 +79,7 @@ class TwitterBootstrapFormFor::FormBuilder < ActionView::Helpers::FormBuilder
       label    = args.first.nil? ? '' : args.shift
       classes  = [ 'controls' ]
       classes << ('input-' + options.delete(:add_on).to_s) if options[:add_on]
+      classes << options.delete(:input_wrapper_class) if options.key?(:input_wrapper_class)
       
       self.div_wrapper_with_label(label,attribute,:input_wrapper_class=>classes.join(' ')) do
         template.concat super(attribute, *(args << options))
