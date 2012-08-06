@@ -66,8 +66,8 @@ class TwitterBootstrapFormFor::FormBuilder < ActionView::Helpers::FormBuilder
   # Yielding this instance is not necessary, but present for backwards compatability.
   # 
   #
-  def inline(label = nil, &block)
-    div_wrapper_with_label(label) do
+  def inline(label = nil, options ={}, &block)
+    div_wrapper_with_label(label,options) do
       render_inline do
         yield(self)
       end
