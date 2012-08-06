@@ -67,7 +67,7 @@ class TwitterBootstrapFormFor::FormBuilder < ActionView::Helpers::FormBuilder
   # 
   #
   def inline(label = nil, options ={}, &block)
-    div_wrapper_with_label(label,options) do
+    div_wrapper_with_label(label,nil,options) do
       render_inline do
         yield(self)
       end
