@@ -92,8 +92,8 @@ class TwitterBootstrapFormFor::FormBuilder < ActionView::Helpers::FormBuilder
   TOGGLES.each do |toggle|
     define_method toggle do |attribute, *args, &block|
       options  = args.extract_options!
-      label    = args.first.nil? ? '&nbsp;' : args.shift
-      description = args.first.nil? ? '&nbsp;' : args.shift
+      label    = args.first.nil? ? '&nbsp;'.html_safe : args.shift
+      description = args.first.nil? ? '&nbsp;'.html_safe : args.shift
       label_class = toggle == :check_box ? "checkbox" : "radio"
       self.div_wrapper_with_label(label,attribute,:input_wrapper_class=>'controls') do
         toggle_html = super(attribute, *(args << options)) << description
